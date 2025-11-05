@@ -17,32 +17,32 @@ typedef struct {
 void mark(char **screen, state s, trav traversal, int *counter) 
 {
     if (s.gen == 0) return;
-   
     int mid = (s.left + s.right) / 2;
-
-    char curr;
-    if (*counter < 26)
-        curr = 'A' + *counter;
-    else
-        curr = 'a' + (*counter - 26) % 26;
-    (*counter)++;
-
-    if (traversal == PREORDER) 
-        screen[s.level][mid] = curr;
 
     state left_child  = { s.left, mid - 1, s.level + 2, s.gen - 1 };
     state right_child = { mid + 1, s.right, s.level + 2, s.gen - 1 };
 
+    if (traversal == PREORDER) {
+        char curr = (*counter < 26) ? 'A' + *counter : 'a' + (*counter - 26) % 26;
+        (*counter)++;
+        screen[s.level][mid] = curr;
+    }
+
     mark(screen, left_child, traversal, counter);
 
-    if (traversal == INORDER)
-
+    if (traversal == INORDER){
+        char curr = (*counter < 26) ? 'A' + *counter : 'a' + (*counter - 26) % 26;
+        (*counter)++;
         screen[s.level][mid] = curr;
-
+    }
+    
     mark(screen, right_child, traversal, counter);
 
-    if (traversal == POSTORDER) 
+    if (traversal == POSTORDER) {
+        char curr = (*counter < 26) ? 'A' + *counter : 'a' + (*counter - 26) % 26;
+        (*counter)++;
         screen[s.level][mid] = curr;
+    }
 }
 
 int main(void) 
