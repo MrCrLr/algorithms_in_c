@@ -25,8 +25,11 @@ char calculate_letter(int *counter) {
 void build_tree(char **screen, state s, trav traversal, int *counter) 
 {
     if (s.gen == 0) return;
+    // find current mid point
     int mid = (s.left + s.right) / 2;
 
+    // Set state based on current midpoint
+    // Levels are always 2 line skips while width scales
     state left_child  = { s.left, mid - 1, s.level + 2, s.gen - 1 };
     state right_child = { mid + 1, s.right, s.level + 2, s.gen - 1 };
 
@@ -49,12 +52,12 @@ void build_tree(char **screen, state s, trav traversal, int *counter)
 
 int main(void) 
 {
-
+    // Get user input
     int generations;
     trav traversal;
 
     printf("Number of generations in binary tree (btw 1-6): ");
-    if (scanf("%d", &generations) != 1) {
+    if (scanf("%d", &generations) != 1 || generations < 1 || generations > 6) {
         fprintf(stderr, "Invalid input.\n");
         return 1;
     }
@@ -64,14 +67,16 @@ int main(void)
     printf("2. Inorder\n");
     printf("3. Postorder\n");
 
-    if (scanf("%d", &traversal) != 1) {
+    if (scanf("%d", &traversal) != 1 || traversal < 1 || traversal > 3) {
         fprintf(stderr, "Invalid input.\n");
         return 1;
     }
 
+    // Adjusted dimensions for aesthetics of frame.
     int width = generations * 2 * 10;
     int height = generations * 2 + 3;
 
+    // Declare 2-d array
     char **screen = malloc(height * sizeof *screen);
     if (!screen) exit(EXIT_FAILURE);
 
@@ -80,6 +85,7 @@ int main(void)
         if (!screen[j]) exit(EXIT_FAILURE);
     }
 
+    // Initialize 2-d array and build frame
     for (int j = 0; j < height; j++) {
         for (int i = 0; i < width; i++) {
             if (i == width - 1 || i == 0)
@@ -90,10 +96,12 @@ int main(void)
                 screen[j][i] = ' ';
         }
     }
+    // Set state for initial call to build_tree function and set counter
     int counter = 0;
     state root = { 2, width - 2, 2, generations };
     build_tree(screen, root, traversal, &counter);
     
+    // Print tree and creation
     printf("\n");
     for (int j = 0; j < height; j++) {
         for (int i = 0; i < width; i++) {
@@ -105,6 +113,7 @@ int main(void)
     printf("\n");
     printf("\n");
 
+    // Free memory 2-d array
     for (int j = 0; j < height; j++)
         free(screen[j]);
     free(screen);
