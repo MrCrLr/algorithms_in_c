@@ -14,7 +14,15 @@ typedef struct {
     int gen;
 } state;
 
-void mark(char **screen, state s, trav traversal, int *counter) 
+char calculate_letter(int *counter) {
+    static const char base62[] =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$";
+    char curr = base62[(*counter) % 63];
+    (*counter)++;
+    return curr;
+}
+
+void build_tree(char **screen, state s, trav traversal, int *counter) 
 {
     if (s.gen == 0) return;
     int mid = (s.left + s.right) / 2;
@@ -23,25 +31,19 @@ void mark(char **screen, state s, trav traversal, int *counter)
     state right_child = { mid + 1, s.right, s.level + 2, s.gen - 1 };
 
     if (traversal == PREORDER) {
-        char curr = (*counter < 26) ? 'A' + *counter : 'a' + (*counter - 26) % 26;
-        (*counter)++;
-        screen[s.level][mid] = curr;
+        screen[s.level][mid] = calculate_letter(counter);
     }
 
-    mark(screen, left_child, traversal, counter);
+    build_tree(screen, left_child, traversal, counter);
 
     if (traversal == INORDER){
-        char curr = (*counter < 26) ? 'A' + *counter : 'a' + (*counter - 26) % 26;
-        (*counter)++;
-        screen[s.level][mid] = curr;
+        screen[s.level][mid] = calculate_letter(counter);
     }
-    
-    mark(screen, right_child, traversal, counter);
+
+    build_tree(screen, right_child, traversal, counter);
 
     if (traversal == POSTORDER) {
-        char curr = (*counter < 26) ? 'A' + *counter : 'a' + (*counter - 26) % 26;
-        (*counter)++;
-        screen[s.level][mid] = curr;
+        screen[s.level][mid] = calculate_letter(counter);
     }
 }
 
@@ -90,7 +92,7 @@ int main(void)
     }
     int counter = 0;
     state root = { 2, width - 2, 2, generations };
-    mark(screen, root, traversal, &counter);
+    build_tree(screen, root, traversal, &counter);
     
     printf("\n");
     for (int j = 0; j < height; j++) {
