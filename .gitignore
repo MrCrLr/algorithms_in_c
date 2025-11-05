@@ -1,26 +1,16 @@
-# Ignore compiled binaries and object files
-*.o
-*.out
-*.exe
-*.dylib
+# Ignore everything
+*
 
-# Ignore macOS debug symbol bundles
-*.dSYM/
-
-# Ignore all executables (no extension)
-ch*/[!_.]*    # skip hidden files; ignore built binaries in ch02, ch03, etc.
-
-# Ignore temporary build files
-*.tmp
-*.log
-*.swp
-*.DS_Store
+# But keep directories (so git can find .c files inside)
+!*/
 
 # Keep all C source files, header files and Makefiles
 !*.c
 !*.h
 !Makefile
 
-# Optional: ignore backup files from editors
-*~
-*.bak
+# Allow the main README
+!README.md
+
+# Allow this gitignore itself
+!.gitignore
