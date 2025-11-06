@@ -1,5 +1,4 @@
 // Standard non-recursive tree traversal method
-
 traverse(struct node *t) 
 {
     push(t);
