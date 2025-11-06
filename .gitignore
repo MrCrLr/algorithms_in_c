@@ -8,6 +8,7 @@
 !*.c
 !*.h
 !Makefile
+!btvt_test.bmp
 
 # Allow the main README
 !README.md
