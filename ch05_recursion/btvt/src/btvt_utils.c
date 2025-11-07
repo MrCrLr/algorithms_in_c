@@ -1,6 +1,7 @@
 #include "btvt_utils.h"
 
-static inline pixel *pixel_at(pixel *img, int w, int h, int x, int y) {
+// Convert pixel from 2d (0,0 bottom left) to 1d
+pixel *pixel_at(pixel *img, int w, int x, int y) {
     return &img[y * w + x];
 }
 
@@ -9,7 +10,7 @@ void set_pixel(pixel *img, int w, int h, int x, int y,
 {
     if (x < 0 || x >= w || y < 0 || y >= h) 
         return;
-    pixel *p = pixel_at(img, w, h, x, y);
+    pixel *p = pixel_at(img, w, x, y);
     p->r = r;
     p->g = g;
     p->b = b;

@@ -1,5 +1,11 @@
 // BINARY TREE VISUALIZATION TOOL (btvt)
 // Save binary tree visualization to a bmp file
+/*
+clang -std=c11 -Wall -Wextra -pedantic src/main.c \
+src/btvt_fileio.c src/btvt_fonts.c src/btvt_utils.c \
+-o build/btvt
+*/
+
 #include "btvt_fileio.h"
 #include "btvt_types.h"
 #include "btvt_utils.h"
@@ -27,7 +33,7 @@ int main(void)
     int length = strlen(word);
     
     // Center string on page horizontally and vertically
-    int start_x = w / 2 - ((length / 2) * (8 * scale)); // Each letter at 1:1 is 8px
+    int start_x = w / 2 - ((length / 2) * (8 * scale)); // Each letter 1:1 8px
     int start_y = h / 2 - (8 * scale / 2); 
     unsigned char r = 255, g = 255, b = 255; // initialize text color
 
@@ -41,6 +47,3 @@ int main(void)
 
     return 0;
 }
-
-
-

@@ -4,7 +4,7 @@
 #include "btvt_types.h"
 #include "btvt_fonts.h"
 
-static inline pixel *pixel_at(pixel *img, int w, int h, int x, int y);
+pixel *pixel_at(pixel *img, int w, int x, int y);
 
 void set_pixel(pixel *img, int w, int h, int x, int y, 
                unsigned char r, unsigned char g, unsigned char b);

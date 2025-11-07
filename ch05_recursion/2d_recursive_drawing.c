@@ -15,9 +15,9 @@ typedef struct {
 } state;
 
 char calculate_letter(int *counter) {
-    static const char base62[] =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$";
-    char curr = base62[(*counter) % 63];
+    static const char base64[] =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#$";
+    char curr = base64[(*counter) % 64];
     (*counter)++;
     return curr;
 }
@@ -39,7 +39,7 @@ void build_tree(char **screen, state s, trav traversal, int *counter)
 
     build_tree(screen, left_child, traversal, counter);
 
-    if (traversal == INORDER){
+    if (traversal == INORDER) {
         screen[s.level][mid] = calculate_letter(counter);
     }
 
