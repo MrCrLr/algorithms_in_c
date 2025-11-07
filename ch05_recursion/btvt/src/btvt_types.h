@@ -11,4 +11,9 @@ typedef struct {
     uint8_t b, g, r;
 } pixel;
 
+typedef struct {
+    pixel *data;
+    int w, h;
+} image_t;
+
 #endif

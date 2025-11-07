@@ -124,8 +124,8 @@ static inline void write_bmp_headers(FILE *f, int width, int height, int bits_pe
     fwrite(info_header, 1, sizeof(info_header), f);
 }
 
-void write_bmp(const char *filename, pixel *img, int width, int height) {
-    if (!filename || !img || width <= 0 || height <= 0) {
+void write_bmp(const char *filename, image_t *img) {
+    if (!filename || !img || img->w <= 0 || img->h <= 0) {
         fprintf(stderr, "Invalid arguments to write_bmp\n");
         return;
     }
@@ -134,14 +134,15 @@ void write_bmp(const char *filename, pixel *img, int width, int height) {
     if (!f) return;
     
     const int bits_per_pixel = 24;
-    write_bmp_headers(f, width, height, bits_per_pixel);
+    write_bmp_headers(f, img->w, img->h, bits_per_pixel);
     
     const int bytes_per_pixel = bits_per_pixel / 8;
     uint8_t pad[3] = {0, 0, 0};
-    int pad_bytes = bmp_pad_bytes(width, bytes_per_pixel);
+    int pad_bytes = bmp_pad_bytes(img->w, bytes_per_pixel);
 
-    for (int y = height - 1; y >= 0; y--) {
-        fwrite(&img[y * width], bytes_per_pixel, width, f);
+    for (int y = img->h - 1; y >= 0; y--) {
+        pixel *row = &img->data[y * img->w];
+        fwrite(row, bytes_per_pixel, img->w, f);
         if (pad_bytes) 
             fwrite(pad, 1, pad_bytes, f);
     }

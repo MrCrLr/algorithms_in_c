@@ -13,6 +13,6 @@
 
 #include "btvt_types.h"
 
-void write_bmp(const char *filename, pixel *img, int width, int height);
+void write_bmp(const char *filename, image_t *img);
 
 #endif
