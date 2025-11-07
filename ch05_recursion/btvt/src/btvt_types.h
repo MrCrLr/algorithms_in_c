@@ -8,7 +8,7 @@
 
 // Core pixel type (shared by everything)
 typedef struct {
-    unsigned char b, g, r;
+    uint8_t b, g, r;
 } pixel;
 
 #endif

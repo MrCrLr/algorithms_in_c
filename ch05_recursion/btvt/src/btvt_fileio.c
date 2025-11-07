@@ -94,11 +94,11 @@ static inline int bmp_pad_bytes(int width, int bytes_per_pixel) {
     return (4 - (width * bytes_per_pixel) % 4) % 4;
 }
 
-static inline void write_u32_le(unsigned char *b, uint32_t v) {
-    b[0] = (unsigned char)(v & 0xFF);
-    b[1] = (unsigned char)((v >> 8) & 0xFF);
-    b[2] = (unsigned char)((v >> 16) & 0xFF);
-    b[3] = (unsigned char)((v >> 24) & 0xFF);
+static inline void write_u32_le(uint8_t *b, uint32_t v) {
+    b[0] = (uint8_t)(v & 0xFF);
+    b[1] = (uint8_t)((v >> 8) & 0xFF);
+    b[2] = (uint8_t)((v >> 16) & 0xFF);
+    b[3] = (uint8_t)((v >> 24) & 0xFF);
 }
 
 static inline void write_bmp_headers(FILE *f, int width, int height, int bits_per_pixel) {
@@ -108,14 +108,14 @@ static inline void write_bmp_headers(FILE *f, int width, int height, int bits_pe
     uint32_t file_size = 14u + 40u + pixel_array_size;
 
     // --- BITMAPFILEHEADER (14 bytes) ---
-    unsigned char file_header[14] = { 'B', 'M', 0 };
+    uint8_t file_header[14] = { 'B', 'M', 0 };
     write_u32_le(&file_header[2], file_size);
     // reserved 4 bytes are zero
     write_u32_le(&file_header[10], 14u + 40u);
     fwrite(file_header, 1, sizeof(file_header), f);
 
     // --- BITMAPINFOHEADER (40 bytes) ---
-    unsigned char info_header[40] = {0};
+    uint8_t info_header[40] = {0};
     write_u32_le(&info_header[0], 40u);
     write_u32_le(&info_header[4], width);
     write_u32_le(&info_header[8], height);
@@ -137,7 +137,7 @@ void write_bmp(const char *filename, pixel *img, int width, int height) {
     write_bmp_headers(f, width, height, bits_per_pixel);
     
     const int bytes_per_pixel = bits_per_pixel / 8;
-    unsigned char pad[3] = {0, 0, 0};
+    uint8_t pad[3] = {0, 0, 0};
     int pad_bytes = bmp_pad_bytes(width, bytes_per_pixel);
 
     for (int y = height - 1; y >= 0; y--) {
