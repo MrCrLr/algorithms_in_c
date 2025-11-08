@@ -1,5 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+/*--------------------------------------------------------------------------*/
+// MIT 6.006 Introduction to Algorithms, Spring 2020
+// Instructor: Erik Demaine
+// Binary Trees, Part 1         https://www.youtube.com/watch?v=76dhtgZt38A
+// Binary Trees, Part 2: AVL    https://www.youtube.com/watch?v=U1JYwHcFfso
+/*--------------------------------------------------------------------------*/
 
 typedef struct node {
     int key;
