@@ -1,4 +1,6 @@
-// Standard non-recursive tree traversal method
+/*--------------------------------------------------------------------------*/
+// Standard non-recursive tree traversal method (Sedgewick)
+/*--------------------------------------------------------------------------*/
 traverse(struct node *t) 
 {
     push(t);
@@ -16,7 +18,9 @@ traverse(struct node *t)
     }
 }
 
-// Again for review, the recusive preorder traversal
+/*--------------------------------------------------------------------------*/
+// Again for review, the recusive preorder traversal (Sedgewick)
+/*--------------------------------------------------------------------------*/
 traverse(struct node *t) 
 {
     push(t);
