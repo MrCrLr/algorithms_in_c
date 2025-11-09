@@ -11,11 +11,15 @@ typedef struct {
 } line_t;
 
 typedef struct {
-    char *img;
+    char *buf;
     int h, w;
-} screen_t;
+} canvas_t;
 
-void draw_line(line_t *line, screen_t *view) {
+static inline int index_2d(const canvas_t *c, int x, int y) {
+    return c->w * y + x;
+}
+
+void draw_recursive_line(const line_t *line, canvas_t *c) {
     if (abs(line->a.x - line->b.x) <= 1 && abs(line->a.y - line->b.y) <= 1)
         return;
 
@@ -24,63 +28,67 @@ void draw_line(line_t *line, screen_t *view) {
         .y = (line->a.y + line->b.y) / 2
     };
 
-    int mid_index = view->w * mid.y + mid.x;
-    if (mid_index >= 0 && mid_index < view->w * view->h)
-        view->img[mid_index] = '.';
-
-    int start_index = view->w * line->a.y + line->a.x;
-    int end_index   = view->w * line->b.y + line->b.x;
-    view->img[start_index] = '.';
-    view->img[end_index]   = '.';
+    if (mid.x >= 0 && mid.x < c->w && mid.y >= 0 && mid.y < c->h) {
+        int idx = index_2d(c, mid.x, mid.y);
+        c->buf[idx] = '.';
+    }
 
     line_t left  = { .a = line->a, .b = mid };
     line_t right = { .a = mid,     .b = line->b };
 
-    draw_line(&left, view);
-    draw_line(&right, view);
+    draw_recursive_line(&left, c);
+    draw_recursive_line(&right, c);
 }
 
-void create_view(screen_t *view, int width, int height) {
-    view->w = width;
-    view->h = height;
-    int len = view->w * view->h;
+void init_canvas(canvas_t *c, int width, int height) {
+    c->w = width;
+    c->h = height;
+    int num_cells = c->w * c->h;
 
-    view->img = calloc(len, sizeof view->img);
-    
-    for (int i = 0; i < len; i++) {
-        int row = i / view->w;
-        int col = i % view->w;
-        if (row == 0 || row == view->h - 1) {
-            view->img[i] = '-';
-        } else if (col == 0 || col == view->w - 1) {
-            view->img[i] = '|';
-        } else {
-            view->img[i] = ' ';
+    c->buf = calloc(num_cells, sizeof *c->buf);
+        if (!c->buf) {
+            perror("calloc c->buf failed in init_canvas");
+            exit(EXIT_FAILURE);
         }
+    
+    for (int i = 0; i < num_cells; i++) {
+        int row = i / c->w;
+        int col = i % c->w;
+        if (row == 0 || row == c->h - 1) {
+            c->buf[i] = '-';
+        } else if (col == 0 || col == c->w - 1) {
+            c->buf[i] = '|';
+        } else {
+            c->buf[i] = ' ';
+        }
+    }
+}
+
+void print_canvas(canvas_t *c) {
+    for (int r = 0; r < c->h; r++) {
+        // size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream);    
+        fwrite(&c->buf[r * c->w], 1, c->w, stdout);
+        putchar('\n');
     }
 }
 
 int main(void) 
 {
-    screen_t *view = malloc(sizeof *view);
+    canvas_t canvas;
     int width = 80;
     int height = 30;
-    create_view(view, width, height);
+    init_canvas(&canvas, width, height);
 
-    line_t line1 = { .a.x=10, .a.y=3,  .b.x=78, .b.y=25 };
-    line_t line2 = { .a.x=50, .a.y=5,  .b.x=2,  .b.y=28 };
-    line_t line3 = { .a.x=65, .a.y=10, .b.x=50, .b.y=22 };
+    const line_t line1 = { .a.x=10, .a.y=3,  .b.x=78, .b.y=25 };
+    const line_t line2 = { .a.x=50, .a.y=5,  .b.x=2,  .b.y=28 };
+    const line_t line3 = { .a.x=65, .a.y=10, .b.x=50, .b.y=22 };
 
-    draw_line(&line1, view);
-    draw_line(&line2, view);
-    draw_line(&line3, view);
+    draw_recursive_line(&line1, &canvas);
+    draw_recursive_line(&line2, &canvas);
+    draw_recursive_line(&line3, &canvas);
 
-    // output screen
-    // size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream);
-    for (int r = 0; r < view->h; r++) {
-        fwrite(&view->img[r * view->w], 1, view->w, stdout);
-        putchar('\n');
-    }
+    print_canvas(&canvas);
+    free(canvas.buf);
 
     return 0;
 }
