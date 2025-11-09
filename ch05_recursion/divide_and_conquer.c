@@ -1,3 +1,4 @@
+// Chapter 5, exercise 8:
 #include <stdio.h>
 #include <stdlib.h>
 
